@@ -1,0 +1,214 @@
+#include <stdio.h>
+#include <string.h>
+int UnionSet(int n1, int n2, int a[], int b[], int ans[]);
+int IntersectionSet(int n1, int n2, int a[], int b[], int ans[]);
+int Differrence(int n1, int n2, int a[], int b[], int ans[]);
+int SymmetricDiff(int n1, int n2, int a[], int b[], int ans[]);
+int Answer(int y, int ans[]);
+
+int main(void)
+{
+    int n1, n2;
+    printf("Enter number of elements in Set A : ");
+    scanf("%d", &n1);
+    int a[n1];
+    printf("Enter the elements of set A : \n");
+    for (int i = 0; i < n1; i++)
+    {
+        scanf("%d", &a[i]);
+    }
+    printf("\nEnter number of elements in Set B : ");
+    scanf("%d", &n2);
+    int b[n2];
+    printf("Enter the elements of set B : \n");
+    for (int i = 0; i < n2; i++)
+    {
+        scanf("%d", &b[i]);
+    }
+    printf("\nThe given sets are : \n");
+    printf("Set A: {");
+    for (int i = 0; i < n1; i++)
+    {
+        printf("%d", a[i]);
+        if (i < n1 - 1)
+            printf(",");
+    }
+    printf("}\n");
+    printf("Set B: {");
+    for (int i = 0; i < n2; i++)
+    {
+        printf("%d", b[i]);
+        if (i < n2 - 1)
+            printf(",");
+    }
+    printf("}\n\n");
+    int choice;
+    int ans[n1 + n2];
+    int sub;
+    int p;
+
+    do
+    {
+        printf("Select Set operation from the following:\n");
+        printf("1.Union\n2.Intersection\n3.Difference\n4.Symmetric difference\n5.Exit\n");
+        printf("Enter your choice : ");
+        scanf("%d", &choice);
+        printf("\n");
+        switch (choice)
+        {
+        case 1:
+            p = UnionSet(n1, n2, a, b, ans);
+            printf("The Union of given sets are : \n");
+            Answer(p, ans);
+            break;
+        case 2:
+            p = IntersectionSet(n1, n2, a, b, ans);
+            printf("The Intersection of given sets are : \n");
+            Answer(p, ans);
+            break;
+        case 3:
+            printf("Select one of the following Differences:\n1.A-B\n2.B-A\n");
+            scanf("%d", &sub);
+            if (sub == 1)
+            {
+                p = Differrence(n1, n2, a, b, ans);
+                printf("The Difference of given sets are : \n");
+                Answer(p, ans);
+            }
+            else if (sub == 2)
+            {
+                p = Differrence(n1, n2, b, a, ans);
+                printf("The Difference of given sets are : \n");
+                Answer(p, ans);
+            }
+            else
+                printf("Invalid Selection\n");
+            break;
+        case 4:
+            p = SymmetricDiff(n1, n2, a, b, ans);
+            printf("The Symmetric Difference of given sets are : \n");
+            Answer(p, ans);
+            break;
+        case 5:
+            printf("Thank you :-)) \n");
+            break;
+        default:
+            printf("Invalid Input\n");
+            break;
+        }
+
+    } while (choice != 5);
+
+    return 0;
+}
+int UnionSet(int n1, int n2, int a[], int b[], int ans[])
+{
+    int i;
+    for (i = 0; i < n1; i++)
+    {
+        ans[i] = a[i];
+    }
+    int z = i;
+    while (z < n1 + n2)
+    {
+        int flag = 0;
+        for (int j = 0; j < n1; j++)
+        {
+            if (ans[j] == b[z - n1])
+                flag = 1;
+        }
+        if (flag == 0)
+        {
+            ans[i] = b[z - n1];
+            i++;
+        }
+        z++;
+    }
+    return i;
+}
+int IntersectionSet(int n1, int n2, int a[], int b[], int ans[])
+{
+    int y = 0;
+    for (int i = 0; i < n1; i++)
+    {
+        for (int j = 0; j < n2; j++)
+        {
+            if (a[i] == b[j])
+            {
+                ans[y] = a[i];
+                y++;
+            }
+        }
+    }
+    return y;
+}
+int Differrence(int n1, int n2, int a[], int b[], int ans[])
+{
+    int y = 0;
+
+    for (int i = 0; i < n1; i++)
+    {
+        int flag = 0;
+        for (int j = 0; j < n2; j++)
+        {
+            if (a[i] == b[j])
+            {
+                flag = 1;
+            }
+        }
+        if (flag == 0)
+        {
+            ans[y] = a[i];
+            y++;
+        }
+    }
+    return y;
+}
+
+int SymmetricDiff(int n1, int n2, int a[], int b[], int ans[])
+{
+    int y = 0;
+    int temp[n1 + n2];
+    int m = IntersectionSet(n1, n2, a, b, temp);
+    for (int i = 0; i < n1; i++)
+    {
+        int flag = 0;
+        for (int j = 0; j < n2; j++)
+        {
+            if (a[i] == temp[j])
+                flag = 1;
+        }
+        if (flag == 0)
+        {
+            ans[y] = a[i];
+            y++;
+        }
+    }
+    for (int i = 0; i < n2; i++)
+    {
+        int flag = 0;
+        for (int j = 0; j < m; j++)
+        {
+            if (b[i] == temp[j])
+                flag = 1;
+        }
+        if (flag == 0)
+        {
+            ans[y] = b[i];
+            y++;
+        }
+    }
+    return y;
+}
+int Answer(int y, int ans[])
+{
+    printf("Answer: {");
+    for (int k = 0; k < y; k++)
+    {
+        printf("%d", ans[k]);
+        if (k < y - 1)
+            printf(",");
+    }
+    printf("}\n");
+    printf("\n");
+}
